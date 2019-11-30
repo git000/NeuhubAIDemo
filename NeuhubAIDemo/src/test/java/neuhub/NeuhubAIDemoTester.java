@@ -114,20 +114,20 @@ public class NeuhubAIDemoTester {
     /**
      * 测试之前进行环境检查，确保输入正确的clientId和clientSecret
      */
-    @Before
-    public void checkEnvironment() {
-        int clientIdLength = 32;
-        int clientSecretLength = 10;
-        if (clientCredentialsResourceDetails.getClientId() == null || clientCredentialsResourceDetails.getClientId().length() != clientIdLength) {
-            logger.error("clientId有误，请重新填写");
-            System.exit(1);
-        }
-
-        if (clientCredentialsResourceDetails.getClientSecret() == null || clientCredentialsResourceDetails.getClientSecret().length() != clientSecretLength) {
-            logger.error("clientSecret有误，请重新填写");
-            System.exit(1);
-        }
-    }
+//    @Before
+//    public void checkEnvironment() {
+//        int clientIdLength = 32;
+//        int clientSecretLength = 10;
+//        if (clientCredentialsResourceDetails.getClientId() == null || clientCredentialsResourceDetails.getClientId().length() != clientIdLength) {
+//            logger.error("clientId有误，请重新填写");
+//            System.exit(1);
+//        }
+//
+//        if (clientCredentialsResourceDetails.getClientSecret() == null || clientCredentialsResourceDetails.getClientSecret().length() != clientSecretLength) {
+//            logger.error("clientSecret有误，请重新填写");
+//            System.exit(1);
+//        }
+//    }
 
     @Test
     public void humanDetect() {
