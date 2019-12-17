@@ -3,7 +3,6 @@ package neuhub;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import neuhub.properties.*;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -22,9 +21,7 @@ import org.springframework.web.client.RestTemplate;
 import javax.imageio.stream.FileImageInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.util.Base64;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * {@link NeuhubAIDemoTester#asr()} 语音识别接口
@@ -56,6 +53,18 @@ import java.util.Map;
  * {@link NeuhubAIDemoTester#tts()} 语音合成接口
  * {@link NeuhubAIDemoTester#universal()} 通用文字识别接口
  * {@link NeuhubAIDemoTester#vehicle()} 行驶证识别接口
+ * {@link NeuhubAIDemoTester#ocrBankcard()} 银行卡识别接口
+ * {@link NeuhubAIDemoTester#ocrBusiness()} 营业执照识别接口
+ * {@link NeuhubAIDemoTester#garbageImageSearch()} 垃圾分类图像识别接口
+ * {@link NeuhubAIDemoTester#garbageVoiceSearch()} 垃圾分类语音识别接口
+ * {@link NeuhubAIDemoTester#garbageTextSearch()} 垃圾分类文本识别接口
+ * {@link NeuhubAIDemoTester#humanParsing()} 细粒度人像分割接口
+ * {@link NeuhubAIDemoTester#personreid()} 行人重识别接口
+ * {@link NeuhubAIDemoTester#productRecognize()} 通用商品识别接口
+ * {@link NeuhubAIDemoTester#vehicleDetection()} 车辆检测接口
+ * {@link NeuhubAIDemoTester#imageSearchIndex()} 通用图片搜索图片入库
+ * {@link NeuhubAIDemoTester#imageSearchTask()} 通用图片搜索任务状态查询
+ * {@link NeuhubAIDemoTester#imageSearch()} 通用图片搜索
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = NeuhubAIDemoApplication.class)
@@ -686,6 +695,227 @@ public class NeuhubAIDemoTester {
         }
         result(responseEntity);
     }
+
+    @Test
+    public void ocrBankcard() {
+        //需要传一张真实的身份证的照片
+        byte[] data = dataBinary(picture);
+        HttpEntity<Object> requestEntity = new HttpEntity<>(data);
+        String requestUrl = gatewayUrl + "/neuhub/ocr_bankcard";
+        ResponseEntity<String> responseEntity = null;
+        try {
+            responseEntity = restTemplate.postForEntity(requestUrl, requestEntity, String.class);
+        } catch (Exception e) {
+            //调用API失败，错误处理
+            throw new RuntimeException(e);
+        }
+        result(responseEntity);
+    }
+
+    @Test
+    public void ocrBusiness() {
+        //需要传一张真实的身份证的照片
+        byte[] data = dataBinary(picture);
+        HttpEntity<Object> requestEntity = new HttpEntity<>(data);
+        String requestUrl = gatewayUrl + "/neuhub/ocr_business";
+        ResponseEntity<String> responseEntity = null;
+        try {
+            responseEntity = restTemplate.postForEntity(requestUrl, requestEntity, String.class);
+        } catch (Exception e) {
+            //调用API失败，错误处理
+            throw new RuntimeException(e);
+        }
+        result(responseEntity);
+    }
+
+    @Test
+    public void garbageImageSearch() {
+        byte[] data = dataBinary(picture);
+        String imageBase64 = imageBase64(data);
+        Map<String, Object> map = new HashMap<>();
+        map.put("imgBase64", imageBase64);
+        map.put("cityId", "310000");
+        HttpEntity<Map<String, Object>> requestEntity = new HttpEntity<>(map);
+        String requestUrl = gatewayUrl + "/neuhub/garbageImageSearch";
+        ResponseEntity<String> responseEntity = null;
+        try {
+            responseEntity = restTemplate.postForEntity(requestUrl, requestEntity, String.class);
+        } catch (Exception e) {
+            //调用API失败，错误处理
+            throw new RuntimeException(e);
+        }
+        result(responseEntity);
+    }
+
+    @Test
+    public void garbageVoiceSearch() {
+        AsrEncode asrEncode = new AsrEncode(1, "amr", 16000, 0);
+        AsrProperty property = new AsrProperty(false, asrEncode, "Linux", "0.0.0.1");
+        String cityId = "310000";
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.set("property", property.toString());
+        httpHeaders.set("cityId", cityId);
+
+        byte[] data = dataBinary(picture);
+        HttpEntity<Object> requestEntity = new HttpEntity<>(data, httpHeaders);
+        //以下参数仅为示例值
+        String requestUrl = gatewayUrl + "/neuhub/garbageVoiceSearch";
+        ResponseEntity<String> responseEntity = null;
+        try {
+            responseEntity = restTemplate.postForEntity(requestUrl, requestEntity, String.class);
+        } catch (Exception e) {
+            //调用API失败，错误处理
+            throw new RuntimeException(e);
+        }
+        result(responseEntity);
+    }
+
+    @Test
+    public void garbageTextSearch() {
+        Map<String, Object> map = new HashMap<>();
+        map.put("text", comment);
+        map.put("cityId", "310000");
+        HttpEntity<Map<String, Object>> requestEntity = new HttpEntity<>(map);
+        String requestUrl = gatewayUrl + "/neuhub/garbageTextSearch";
+        ResponseEntity<String> responseEntity = null;
+        try {
+            responseEntity = restTemplate.postForEntity(requestUrl, requestEntity, String.class);
+        } catch (Exception e) {
+            //调用API失败，错误处理
+            throw new RuntimeException(e);
+        }
+        result(responseEntity);
+    }
+
+    @Test
+    public void humanParsing() {
+        //需要传一张真实的身份证的照片
+        byte[] data = dataBinary(picture);
+        HttpEntity<Object> requestEntity = new HttpEntity<>(data);
+        String requestUrl = gatewayUrl + "/neuhub/human_parsing";
+        ResponseEntity<String> responseEntity = null;
+        try {
+            responseEntity = restTemplate.postForEntity(requestUrl, requestEntity, String.class);
+        } catch (Exception e) {
+            //调用API失败，错误处理
+            throw new RuntimeException(e);
+        }
+        result(responseEntity);
+    }
+
+    @Test
+    public void personreid() {
+        //需要传一张真实的身份证的照片
+        byte[] data = dataBinary(picture);
+        HttpEntity<Object> requestEntity = new HttpEntity<>(data);
+        String requestUrl = gatewayUrl + "/neuhub/personreid";
+        ResponseEntity<String> responseEntity = null;
+        try {
+            responseEntity = restTemplate.postForEntity(requestUrl, requestEntity, String.class);
+        } catch (Exception e) {
+            //调用API失败，错误处理
+            throw new RuntimeException(e);
+        }
+        result(responseEntity);
+    }
+
+    @Test
+    public void productRecognize() {
+        byte[] data = dataBinary(picture);
+        String encodedText = imageBase64(data);
+        String value = String.format("content=%s", encodedText);
+        HttpEntity<String> requestEntity = new HttpEntity<>(value);
+        String requestUrl = gatewayUrl + "/neuhub/productRecognize";
+        ResponseEntity<String> responseEntity = null;
+        try {
+            responseEntity = restTemplate.postForEntity(requestUrl, requestEntity, String.class);
+        } catch (Exception e) {
+            //调用API失败，错误处理
+            throw new RuntimeException(e);
+        }
+        result(responseEntity);
+    }
+
+    @Test
+    public void vehicleDetection() {
+        //需要传一张真实的身份证的照片
+        byte[] data = dataBinary(picture);
+        HttpEntity<Object> requestEntity = new HttpEntity<>(data);
+        String requestUrl = gatewayUrl + "/neuhub/vehicle_detection";
+        ResponseEntity<String> responseEntity = null;
+        try {
+            responseEntity = restTemplate.postForEntity(requestUrl, requestEntity, String.class);
+        } catch (Exception e) {
+            //调用API失败，错误处理
+            throw new RuntimeException(e);
+        }
+        result(responseEntity);
+    }
+
+    @Test
+    public void imageSearchIndex() {
+
+        byte[] data = dataBinary(picture);
+        String imageBase64 = imageBase64(data);
+        String requestUrl = gatewayUrl + "/neuhub/index";
+        List<Docs> docsList = new ArrayList<>();
+        Docs docs = new Docs();
+        docs.setImage_name("Milk_salt_soda_v1");
+        docs.setImage_content(imageBase64);
+        docs.setInfo("info");
+        docsList.add(docs);
+        Map<String, Object> map = new HashMap<>();
+        map.put("collection_name", comment);
+        map.put("docs", docsList);
+        HttpEntity<Map<String, Object>> requestEntity = new HttpEntity<>(map);
+        ResponseEntity<String> responseEntity = null;
+        try {
+            responseEntity = restTemplate.postForEntity(requestUrl, requestEntity, String.class);
+        } catch (Exception e) {
+            //调用API失败，错误处理
+            throw new RuntimeException(e);
+        }
+        result(responseEntity);
+    }
+
+    @Test
+    public void imageSearchTask() {
+        String task_id = "3548/蔬菜/1576589636.5655253";
+        String requestUrl = gatewayUrl + "/neuhub/task?task_id=" + task_id;
+
+        ResponseEntity<String> responseEntity = null;
+        try {
+            responseEntity = restTemplate.getForEntity(requestUrl, String.class);
+        } catch (Exception e) {
+            //调用API失败，错误处理
+            throw new RuntimeException(e);
+        }
+        result(responseEntity);
+    }
+
+    @Test
+    public void imageSearch() {
+
+        byte[] data = dataBinary(picture);
+        String imageBase64 = imageBase64(data);
+        String requestUrl = gatewayUrl + "/neuhub/search";
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("collection_name", comment);
+        map.put("query_content", imageBase64);
+        map.put("top_k", 50);
+        HttpEntity<Map<String, Object>> requestEntity = new HttpEntity<>(map);
+        ResponseEntity<String> responseEntity = null;
+        try {
+            responseEntity = restTemplate.postForEntity(requestUrl, requestEntity, String.class);
+        } catch (Exception e) {
+            //调用API失败，错误处理
+            throw new RuntimeException(e);
+        }
+        result(responseEntity);
+    }
+
+
 
     private String imageBase64(byte[] data) {
         Base64.Encoder encoder = Base64.getEncoder();
