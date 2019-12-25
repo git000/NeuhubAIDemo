@@ -1,0 +1,7 @@
+security:
+  oauth2:
+    client:
+      access-token-uri: https://hefei-aiauth.jdcloud.com/oauth/token
+
+gateway:
+  url: https://hefei-ccyaigw.jdcloud.com
