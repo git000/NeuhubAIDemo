@@ -65,6 +65,7 @@ import java.util.*;
  * {@link NeuhubAIDemoTester#imageSearchIndex()} 通用图片搜索图片入库
  * {@link NeuhubAIDemoTester#imageSearchTask()} 通用图片搜索任务状态查询
  * {@link NeuhubAIDemoTester#imageSearch()} 通用图片搜索
+ * {@link NeuhubAIDemoTester#universalForPesticide()} 化肥农药袋子识别
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = NeuhubAIDemoApplication.class)
@@ -915,7 +916,22 @@ public class NeuhubAIDemoTester {
         result(responseEntity);
     }
 
-
+    @Test
+    public void universalForPesticide() {
+        byte[] data = dataBinary(picture);
+        String imageBase64 = imageBase64(data);
+        String value = String.format("imageBase64Str=%s", imageBase64);
+        HttpEntity<String> requestEntity = new HttpEntity<>(value);
+        String requestUrl = gatewayUrl + "/neuhub/universalForPesticide";
+        ResponseEntity<String> responseEntity = null;
+        try {
+            responseEntity = restTemplate.postForEntity(requestUrl, requestEntity, String.class);
+        } catch (Exception e) {
+            //调用API失败，错误处理
+            throw new RuntimeException(e);
+        }
+        result(responseEntity);
+    }
 
     private String imageBase64(byte[] data) {
         Base64.Encoder encoder = Base64.getEncoder();
