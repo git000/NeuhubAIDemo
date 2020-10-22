@@ -65,6 +65,7 @@ import java.util.*;
  * {@link NeuhubAIDemoTester#imageSearchIndex()} 通用图片搜索图片入库
  * {@link NeuhubAIDemoTester#imageSearchTask()} 通用图片搜索任务状态查询
  * {@link NeuhubAIDemoTester#imageSearch()} 通用图片搜索
+ * {@link NeuhubAIDemoTester#extract_img_colors()} 颜色识别
  * {@link NeuhubAIDemoTester#universalForPesticide()} 化肥农药袋子识别
  */
 @RunWith(SpringRunner.class)
@@ -138,7 +139,6 @@ public class NeuhubAIDemoTester {
 //            System.exit(1);
 //        }
 //    }
-
     @Test
     public void humanDetect() {
         byte[] data = dataBinary(picture);
@@ -906,6 +906,29 @@ public class NeuhubAIDemoTester {
         map.put("query_content", imageBase64);
         map.put("top_k", 50);
         HttpEntity<Map<String, Object>> requestEntity = new HttpEntity<>(map);
+        ResponseEntity<String> responseEntity = null;
+        try {
+            responseEntity = restTemplate.postForEntity(requestUrl, requestEntity, String.class);
+        } catch (Exception e) {
+            //调用API失败，错误处理
+            throw new RuntimeException(e);
+        }
+        result(responseEntity);
+    }
+
+    @Test
+    public void extract_img_colors() {
+
+        byte[] data = dataBinary(picture);
+        String imageBase64 = imageBase64(data);
+        String requestUrl = gatewayUrl + "/neuhub/extract_img_colors";
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("color_count", 10);
+        map.put("image", imageBase64);
+        HttpEntity<Map<String, Object>> requestEntity = new HttpEntity<>(map, headers);
         ResponseEntity<String> responseEntity = null;
         try {
             responseEntity = restTemplate.postForEntity(requestUrl, requestEntity, String.class);
