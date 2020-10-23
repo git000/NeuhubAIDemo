@@ -1,7 +1,8 @@
 package neuhub;
-       
+
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import neuhub.configuration.MyMappingJackson2HttpMessageConverter;
 import neuhub.properties.*;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -16,6 +17,8 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.oauth2.client.token.grant.client.ClientCredentialsResourceDetails;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
 import javax.imageio.stream.FileImageInputStream;
@@ -66,6 +69,7 @@ import java.util.*;
  * {@link NeuhubAIDemoTester#imageSearchTask()} 通用图片搜索任务状态查询
  * {@link NeuhubAIDemoTester#imageSearch()} 通用图片搜索
  * {@link NeuhubAIDemoTester#extract_img_colors()} 颜色识别
+ * {@link NeuhubAIDemoTester#detect_shelf_product()} 货架商品检测
  * {@link NeuhubAIDemoTester#universalForPesticide()} 化肥农药袋子识别
  */
 @RunWith(SpringRunner.class)
@@ -829,7 +833,8 @@ public class NeuhubAIDemoTester {
         String encodedText = imageBase64(data);
         String value = String.format("content=%s", encodedText);
         HttpEntity<String> requestEntity = new HttpEntity<>(value);
-        String requestUrl = gatewayUrl + "/neuhub/productRecognize";
+        // String requestUrl = gatewayUrl + "/neuhub/productRecognize";
+        String requestUrl = gatewayUrl + "/neuhub/image_recognition_product";
         ResponseEntity<String> responseEntity = null;
         try {
             responseEntity = restTemplate.postForEntity(requestUrl, requestEntity, String.class);
@@ -925,13 +930,33 @@ public class NeuhubAIDemoTester {
         byte[] data = dataBinary(picture);
         String imageBase64 = imageBase64(data);
         String requestUrl = gatewayUrl + "/neuhub/extract_img_colors";
+        Map<String, Object> map = new HashMap<>(2);
+        // map.put("color_count", 10);
+        map.put("image", imageBase64);
+        HttpEntity<Map<String, Object>> requestEntity = new HttpEntity<>(map);
+        ResponseEntity<String> responseEntity = null;
+        try {
+            responseEntity = restTemplate.postForEntity(requestUrl, requestEntity, String.class);
+        } catch (Exception e) {
+            //调用API失败，错误处理
+            throw new RuntimeException(e);
+        }
+        result(responseEntity);
+    }
+
+    @Test
+    public void detect_shelf_product() {
+
+        byte[] data = dataBinary(picture);
+        String imageBase64 = imageBase64(data);
+        String requestUrl = gatewayUrl + "/neuhub/detect_shelf_product";
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
 
         Map<String, Object> map = new HashMap<>();
-        map.put("color_count", 10);
         map.put("image", imageBase64);
-        HttpEntity<Map<String, Object>> requestEntity = new HttpEntity<>(map, headers);
+        // HttpEntity<Map<String, Object>> requestEntity = new HttpEntity<>(map, headers);
+        HttpEntity<Map<String, Object>> requestEntity = new HttpEntity<>(map);
         ResponseEntity<String> responseEntity = null;
         try {
             responseEntity = restTemplate.postForEntity(requestUrl, requestEntity, String.class);
