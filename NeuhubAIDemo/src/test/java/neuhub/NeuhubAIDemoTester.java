@@ -338,7 +338,6 @@ public class NeuhubAIDemoTester {
         HttpEntity<Object> requestEntity = new HttpEntity<>(param);
         //groupId为分组ID
         String groupId = "5249f5d4-96ad-46b5-8e88-1e51be2d20c8";
-        //TODO  没有调通
         String requestUrl = gatewayUrl + "/neuhub/faceSearchV1";
         ResponseEntity<String> responseEntity = null;
         try {
