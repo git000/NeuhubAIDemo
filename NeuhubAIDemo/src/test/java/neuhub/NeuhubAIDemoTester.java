@@ -1,6 +1,6 @@
 package neuhub;
        
- 
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import neuhub.properties.*;
 import org.junit.Test;
