@@ -31,8 +31,8 @@ import java.util.*;
  * {@link NeuhubAIDemoTester#faceAntiSpoof()} 人脸活体检测接口
  * {@link NeuhubAIDemoTester#food()} 菜品识别接口
  * {@link NeuhubAIDemoTester#humanDetect()} 人体检测接口
- * {@link NeuhubAIDemoTester#idCard()} 身份证识别接口
- * {@link NeuhubAIDemoTester#invoice()} 增值税发票识别接口
+ * {@link NeuhubAIDemoTester#ocrIdCard()} 身份证识别接口
+ * {@link NeuhubAIDemoTester#ocrInvoice()} 增值税发票识别接口
  * {@link NeuhubAIDemoTester#leaderRec()} 特定人物识别接口
  * {@link NeuhubAIDemoTester#lexer()} 词法分析接口
  * {@link NeuhubAIDemoTester#poseEstimation()} 人体关键点检测接口
@@ -51,8 +51,8 @@ import java.util.*;
  * {@link NeuhubAIDemoTester#textClassification()} 文本分类接口
  * {@link NeuhubAIDemoTester#systax()} 句法分析接口
  * {@link NeuhubAIDemoTester#tts()} 语音合成接口
- * {@link NeuhubAIDemoTester#universal()} 通用文字识别接口
- * {@link NeuhubAIDemoTester#vehicle()} 行驶证识别接口
+ * {@link NeuhubAIDemoTester#ocrUniversal()} 通用文字识别接口
+ * {@link NeuhubAIDemoTester#ocrVehicleRecognition()} 行驶证识别接口
  * {@link NeuhubAIDemoTester#ocrBankcard()} 银行卡识别接口
  * {@link NeuhubAIDemoTester#ocrBusiness()} 营业执照识别接口
  * {@link NeuhubAIDemoTester#garbageImageSearch()} 垃圾分类图像识别接口
@@ -338,7 +338,8 @@ public class NeuhubAIDemoTester {
         HttpEntity<Object> requestEntity = new HttpEntity<>(param);
         //groupId为分组ID
         String groupId = "5249f5d4-96ad-46b5-8e88-1e51be2d20c8";
-        String requestUrl = gatewayUrl + "/neuhub/faceSearch?groupId={groupId}";
+        //TODO  没有调通
+        String requestUrl = gatewayUrl + "/neuhub/faceSearchV1";
         ResponseEntity<String> responseEntity = null;
         try {
             responseEntity = restTemplate.postForEntity(requestUrl, requestEntity, String.class, groupId);
@@ -559,7 +560,7 @@ public class NeuhubAIDemoTester {
     }
 
     @Test
-    public void idCard() {
+    public void ocrIdCard() {
         //需要传一张真实的身份证的照片
         byte[] data = dataBinary(picture);
         HttpEntity<Object> requestEntity = new HttpEntity<>(data);
@@ -575,7 +576,7 @@ public class NeuhubAIDemoTester {
     }
 
     @Test
-    public void invoice() {
+    public void ocrInvoice() {
         byte[] data = dataBinary(picture);
         HttpEntity<Object> requestEntity = new HttpEntity<>(data);
         String requestUrl = gatewayUrl + "/neuhub/ocr_invoice";
@@ -590,7 +591,7 @@ public class NeuhubAIDemoTester {
     }
 
     @Test
-    public void universal() {
+    public void ocrUniversal() {
         byte[] data = dataBinary(picture);
         HttpEntity<Object> requestEntity = new HttpEntity<>(data);
         String requestUrl = gatewayUrl + "/neuhub/ocr_universal";
@@ -604,8 +605,11 @@ public class NeuhubAIDemoTester {
         result(responseEntity);
     }
 
+
+
+
     @Test
-    public void vehicle() {
+    public void ocrVehicleRecognition() {
         byte[] data = dataBinary(picture);
         HttpEntity<Object> requestEntity = new HttpEntity<>(data);
         String requestUrl = gatewayUrl + "/neuhub/ocr_vehicle_recognition";
