@@ -2,7 +2,6 @@ package neuhub;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import neuhub.configuration.MyMappingJackson2HttpMessageConverter;
 import neuhub.properties.*;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -17,8 +16,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.oauth2.client.token.grant.client.ClientCredentialsResourceDetails;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
 import javax.imageio.stream.FileImageInputStream;
@@ -36,7 +33,7 @@ import java.util.*;
  * {@link NeuhubAIDemoTester#humanDetect()} 人体检测接口
  * {@link NeuhubAIDemoTester#ocrIdCard()} 身份证识别接口
  * {@link NeuhubAIDemoTester#ocrInvoice()} 增值税发票识别接口
- * {@link NeuhubAIDemoTester#leaderRec()} 特定人物识别接口
+ * {@link NeuhubAIDemoTester#politiciansRecognition()} 特定人物识别接口
  * {@link NeuhubAIDemoTester#lexer()} 词法分析接口
  * {@link NeuhubAIDemoTester#poseEstimation()} 人体关键点检测接口
  * {@link NeuhubAIDemoTester#searchFace()} 人脸搜索接口
@@ -403,7 +400,7 @@ public class NeuhubAIDemoTester {
     }
 
     @Test
-    public void leaderRec() {
+    public void politiciansRecognition() {
         byte[] data = dataBinary(picture);
         HttpEntity<Object> requestEntity = new HttpEntity<>(data);
         //以下参数仅为示例值
