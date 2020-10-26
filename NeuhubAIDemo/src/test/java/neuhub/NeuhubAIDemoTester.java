@@ -43,6 +43,7 @@ import java.util.*;
  * {@link NeuhubAIDemoTester#poseEstimation()} 人体关键点检测接口
  * {@link NeuhubAIDemoTester#searchFace()} 人脸搜索接口
  * {@link NeuhubAIDemoTester#faceGroupCreate()} 创建人脸分组接口
+ *  * * * {@link NeuhubAIDemoTester#groupFetchV1()} 获取分组列表
  * {@link NeuhubAIDemoTester#faceGroupDelete()} 删除人脸分组接口
  * {@link NeuhubAIDemoTester#faceCreate()} 创建人脸接口
  * {@link NeuhubAIDemoTester#faceDelete()} 删除人脸接口
@@ -268,15 +269,18 @@ public class NeuhubAIDemoTester {
         result(responseEntity);
     }
 
+    /**
+     * 创建人脸分组
+     */
     @Test
     public void faceGroupCreate() {
         /**
          * groupName为用户创建分组的名称，根据分组名称完成创建后可以获得groupId，
          * 通过{@link NeuhubAIDemoTester#getFaceGroupList()} 查看分组信息
          */
-        String groupName = "test0726";
+        String groupName = "zhoujiaweiTest";
         HttpEntity<Object> requestEntity = new HttpEntity<>(null, null);
-        String requestUrl = gatewayUrl + "/neuhub/faceGroupCreate?groupName={groupName}";
+        String requestUrl = gatewayUrl + "/neuhub/groupCreateV1?groupName={groupName}";
         ResponseEntity<String> responseEntity = null;
         try {
             responseEntity = restTemplate.postForEntity(requestUrl, requestEntity, String.class, groupName);
@@ -287,25 +291,44 @@ public class NeuhubAIDemoTester {
         result(responseEntity);
     }
 
+
+    /**
+     * 获取分组列表
+     */
+    @Test
+    public void groupFetchV1() {
+        HttpEntity<Object> requestEntity = new HttpEntity<>(null, null);
+        String requestUrl = gatewayUrl + "/neuhub/groupFetchV1";
+        ResponseEntity<String> responseEntity = null;
+        try {
+            responseEntity = restTemplate.postForEntity(requestUrl, requestEntity, String.class);
+        } catch (Exception e) {
+            //调用API失败，错误处理
+            throw new RuntimeException(e);
+        }
+        result(responseEntity);
+    }
+
+    /**
+     *  创建人脸接口
+     */
     @Test
     public void faceCreate() {
         byte[] data = dataBinary(picture);
         String encodedText = imageBase64(data);
-        String param = String.format("imageBase64=%s", encodedText);
-        HttpEntity<Object> requestEntity = new HttpEntity<>(param);
-        /**
-         *  groupId需要调接口去创建
-         *  {@link NeuhubAIDemoTester#faceGroupCreate()}
-         */
-        String groupId = "c0a0ed2b-a355-48c7-a4f7-c702fda26308";
-        /**
-         * 人脸图片的id值，用户自己生成，自己控制去重
-         */
-        String outerId = "0726testFace1";
-        String requestUrl = gatewayUrl + "/neuhub/face_create?groupId={groupId}&outerId={outerId}";
+
+        //调用 faceGroupCreate() 接口创建分组ID
+        String groupId = "5f9698af6feeeab9f228b8aa";
+        Map<String,Object>map = new HashMap();
+        map.put("groupId",groupId);
+        map.put("imgBase64",encodedText);
+
+        //调用创建分组接口
+        HttpEntity<Object> requestEntity = new HttpEntity<>(map);
+        String requestUrl = gatewayUrl + "/neuhub/faceCreateV1";
         ResponseEntity<String> responseEntity = null;
         try {
-            responseEntity = restTemplate.postForEntity(requestUrl, requestEntity, String.class, groupId, outerId);
+            responseEntity = restTemplate.postForEntity(requestUrl, requestEntity, String.class);
         } catch (Exception e) {
             //调用API失败，错误处理
             throw new RuntimeException(e);
@@ -373,18 +396,25 @@ public class NeuhubAIDemoTester {
         result(responseEntity);
     }
 
+    /**
+     * 人脸搜索接口
+     */
     @Test
     public void searchFace() {
         byte[] data = dataBinary(picture);
         String encodedText = imageBase64(data);
-        String param = String.format("imageBase64=%s", encodedText);
-        HttpEntity<Object> requestEntity = new HttpEntity<>(param);
-        //groupId为分组ID
-        String groupId = "5249f5d4-96ad-46b5-8e88-1e51be2d20c8";
+
+        //调用 faceGroupCreate() 接口创建分组ID
+        String groupId = "5f9698af6feeeab9f228b8aa";
+        Map<String,Object>map = new HashMap();
+        map.put("groupId",groupId);
+        map.put("imgBase64",encodedText);
+
+        HttpEntity<Object> requestEntity = new HttpEntity<>(map);
         String requestUrl = gatewayUrl + "/neuhub/faceSearchV1";
         ResponseEntity<String> responseEntity = null;
         try {
-            responseEntity = restTemplate.postForEntity(requestUrl, requestEntity, String.class, groupId);
+            responseEntity = restTemplate.postForEntity(requestUrl, requestEntity, String.class);
         } catch (Exception e) {
             //调用API失败，错误处理
             throw new RuntimeException(e);
