@@ -3,7 +3,6 @@ package neuhub;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import neuhub.properties.AsrEncode;
-import org.codehaus.jackson.map.ObjectMapper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -23,7 +22,6 @@ import org.springframework.web.client.RestTemplate;
 import javax.imageio.stream.FileImageInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.HashMap;
@@ -290,18 +288,16 @@ public class myTest {
         encodeMap.put("sample_rate", 16000);
 
         HashMap<Object, Object> property = new HashMap<>();
-        property.put("platform", "Linux&Centos&7.3");
+        property.put("platform", "Linux");
         property.put("version", "0.0.0.1");
         property.put("vpr_mode", "enroll");
         property.put("autoend", false);
-        property.put("encode", JSON.toJSONString(encodeMap));
-
-        AsrEncode asrEncode = new AsrEncode(1, "wav", 16000);
-        // AsrProperty property = new AsrProperty(false, asrEncode, "Linux", "0.0.0.1");
-
+        // property.put("encode", JSON.toJSONString(encodeMap));
+        property.put("encode", encodeMap);
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.set("Content-Type", "application/octet-stream");
-        httpHeaders.set("Application-Id", "123456789");
+        // httpHeaders.set("Content-Type", "application/json");
+        httpHeaders.set("Application-Id", "search-app");
         httpHeaders.set("Request-Id", UUID.randomUUID().toString());
         httpHeaders.set("User-Id", "IMEI-12345678");
         httpHeaders.set("Sequence-Id", "-1");
@@ -311,7 +307,6 @@ public class myTest {
         httpHeaders.set("Property", JSON.toJSONString(property));
         byte[] data = dataBinary(picture);
         HttpEntity<Object> requestEntity = new HttpEntity<>(data, httpHeaders);
-
         //以下参数仅为示例值
         String requestUrl = gatewayUrl + "/neuhub/vpr";
         ResponseEntity<String> responseEntity = null;
@@ -325,7 +320,24 @@ public class myTest {
     }
 
     /**
-     * 调用结果: {"code":"10000","charge":true,"remain":998,"remainTimes":998,"remainSeconds":-1,"msg":"查询成功,扣费","result":{"request_id":"94deb455-cede-49b3-b546-df1907a55987","index":-1,"err_no":0,"err_msg":"","content":[{"text":""}]}}
+     * 调用结果: {
+     *     "code": "10000",
+     *     "charge": true,
+     *     "remain": 998,
+     *     "remainTimes": 998,
+     *     "remainSeconds": -1,
+     *     "msg": "查询成功,扣费",
+     *     "result": {
+     *         "request_id": "94deb455-cede-49b3-b546-df1907a55987",
+     *         "index": -1,
+     *         "err_no": 0,
+     *         "err_msg": "",
+     *         "content": [{
+     *                 "text": ""
+     *             }
+     *         ]
+     *     }
+     * }
      */
     // TODO 实时语音识别	/neuhub/rt_asr
     @Test
@@ -344,7 +356,6 @@ public class myTest {
         property.put("encode", encodeMap);
 
         AsrEncode asrEncode = new AsrEncode(1, "wav", 16000);
-        // AsrProperty property = new AsrProperty(false, asrEncode, "Linux", "0.0.0.1");
 
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.set("Content-Type", "application/octet-stream");
@@ -371,9 +382,22 @@ public class myTest {
         result(responseEntity);
     }
 
-    /*
-     * 调用结果: {"code":"10000","charge":true,"remain":495,"remainTimes":495,"remainSeconds":-1,"msg":"查询成功,扣费","result":{"status":13004,"message":"no face detected","request_id":"d41d8cd98f00b204e9800998ecf8427e"}}
-     * */
+    /**
+     * 调用结果:{
+     *     "code": "10000",
+     *     "charge": true,
+     *     "remain": 495,
+     *     "remainTimes": 495,
+     *     "remainSeconds": -1,
+     *     "msg": "查询成功,扣费",
+     *     "result": {
+     *         "status": 13004,
+     *         "message": "no face detected",
+     *         "request_id": "d41d8cd98f00b204e9800998ecf8427e"
+     *     }
+     * }
+     */
+
     // 人脸口罩识别	/neuhub/mask_detect
     @Test
     public void mask_detect() {
@@ -612,7 +636,15 @@ public class myTest {
     }
 
     /**
-     * {"code":"10000","charge":true,"remain":490,"remainTimes":490,"remainSeconds":-1,"msg":"查询成功,扣费","result":{"status_code":0,"message":"SUCCESS","task_status":"FINISHED","succeeded_list":[],"pending_list":[],"failed_list":[]}}
+     * "code": "10000", "charge": true, "remain": 490, "remainTimes": 490, "remainSeconds": -1, "msg": "查询成功,扣费", "result": {
+     *     "status_code": 0,
+     *     "message": "SUCCESS",
+     *     "task_status": "FINISHED",
+     *     "succeeded_list": [],
+     *     "pending_list": [],
+     *     "failed_list": []
+     * }
+     * }
      */
     // 通用图片搜索_任务状态查询请求	/neuhub/task
     @Test
@@ -620,7 +652,6 @@ public class myTest {
         byte[] data = dataBinary(picture);
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.set("Content-Type", "application/x-www-form-urlencoded");
-        // HashMap<Object, Object> map = new HashMap<>();
         // 设置请求参数
         MultiValueMap<String, Object> map = new LinkedMultiValueMap<>();
 
@@ -631,14 +662,13 @@ public class myTest {
         ResponseEntity<String> responseEntity = null;
         try {
             String s = restTemplate.postForObject(requestUrl, requestEntity, String.class);
-            System.out.println(s);
             responseEntity = new ResponseEntity(s, HttpStatus.valueOf(200));
         } catch (Exception e) {
             //调用API失败，错误处理
             throw new RuntimeException(e);
         }
 
-        // result(responseEntity);
+        result(responseEntity);
     }
 
     /**
@@ -734,21 +764,34 @@ public class myTest {
         result(responseEntity);
     }
 
-    // 通用图片搜索_图片删除请求	/neuhub/image_delete
+    /**
+     * 通用图片搜索_图片删除请求	/neuhub/image_delete
+     * 调用结果: {
+     *     "code": "10000",
+     *     "charge": true,
+     *     "remain": 484,
+     *     "remainTimes": 484,
+     *     "remainSeconds": -1,
+     *     "msg": "查询成功,扣费",
+     *     "result": {
+     *         "status_code": 0,
+     *         "message": "SUCCESS",
+     *         "succeeded_list": ["双黄白莲蓉2"],
+     *         "failed_list": []
+     *     }
+     * }
+     */
     @Test
     public void image_delete() {
         byte[] data = dataBinary(picture);
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.set("Content-Type", "application/json");
-        // MultiValueMap<String, Object> map = new LinkedMultiValueMap<>();
         HashMap<Object, Object> map = new HashMap<>();
         map.put("collection_name", "food");
         ArrayList<Object> list = new ArrayList<>();
         HashMap<Object, Object> paraMap = new HashMap<>();
         paraMap.put("image_name", "Milk_salt_soda_v1");
-        // paraMap.put("image_content", imageBase64(data));
-        list.add(paraMap);
-        // String s = JSONArray.toJSONString(list);
+        list.add("双黄白莲蓉2");
         map.put("image_names", list);
         HttpEntity<Object> requestEntity = new HttpEntity<>(map, httpHeaders);
         //以下参数仅为示例值
@@ -756,8 +799,6 @@ public class myTest {
         ResponseEntity<String> responseEntity = null;
         try {
             responseEntity = restTemplate.postForEntity(requestUrl, requestEntity, String.class);
-            // responseEntity= new ResponseEntity(s1, HttpStatus.valueOf(200));
-            // System.out.println(s1);
         } catch (Exception e) {
             //调用API失败，错误处理
             throw new RuntimeException(e);
@@ -781,9 +822,9 @@ public class myTest {
         ArrayList<Object> list = new ArrayList<>();
         HashMap<Object, Object> paraMap = new HashMap<>();
         paraMap.put("image_name", "双黄白莲蓉2");
+        paraMap.put("info","other");
         paraMap.put("image_content", imageBase64(data));
         list.add(paraMap);
-        // String s = JSONArray.toJSONString(list);
         map.put("docs", list);
         HttpEntity<Object> requestEntity = new HttpEntity<>(map, httpHeaders);
         //以下参数仅为示例值
@@ -791,8 +832,6 @@ public class myTest {
         ResponseEntity<String> responseEntity = null;
         try {
             responseEntity = restTemplate.postForEntity(requestUrl, requestEntity, String.class);
-            // responseEntity= new ResponseEntity(s1, HttpStatus.valueOf(200));
-            // System.out.println(s1);
         } catch (Exception e) {
             //调用API失败，错误处理
             throw new RuntimeException(e);
@@ -804,42 +843,26 @@ public class myTest {
     // 通用图片搜索_图片信息查询请求	/neuhub/image_fetch
     @Test
     public void image_fetch() {
-
         MultiValueMap<String, Object> form = new LinkedMultiValueMap<>();  //表单数据结构
         form.add("collection_name", "food");
         ArrayList<Object> list = new ArrayList<>();
-        HashMap<Object, Object> paraMap = new HashMap<>();
-        paraMap.put("image_name", "Milk_salt_soda_v1");
-        String json = null;
-        try {
-            json = new ObjectMapper().writeValueAsString(paraMap);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        list.add(json);
-        form.add("image_names", JSONArray.toJSONString(list));
+        list.add("双黄白莲蓉1");
+        list.add("双黄白莲蓉2");
+        form.add("image_names", list);
 
         HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.set("Content-Type", "application/x-www-form-urlencoded");
-        // MultiValueMap<String, Object> map = new LinkedMultiValueMap<>();
+        // httpHeaders.set("Content-Type", "application/x-www-form-urlencoded");
+        httpHeaders.set("Content-Type", "application/json");
         HashMap<Object, Object> map = new HashMap<>();
-        // MultiValueMap<String, Object> map = new LinkedMultiValueMap<>();
-        // map.put("collection_name", "food");
-        // ArrayList<Object> list = new ArrayList<>();
-        // HashMap<Object, Object> paraMap = new HashMap<>();
-        paraMap.put("image_name", "Milk_salt_soda_v1");
-        // paraMap.put("image_content", imageBase64(data));
-        list.add(paraMap);
         String s1 = JSONArray.toJSONString(list);
+        map.put("collection_name", "food");
         map.put("image_names", list);
-        HttpEntity<Object> requestEntity = new HttpEntity<>(form, httpHeaders);
+        HttpEntity<Object> requestEntity = new HttpEntity<>(map, httpHeaders);
         //以下参数仅为示例值
         String requestUrl = gatewayUrl + "/neuhub/image_fetch";
         ResponseEntity<String> responseEntity = null;
         try {
-            String s = restTemplate.postForObject(requestUrl, requestEntity, String.class);
-            System.out.println(s);
-            responseEntity = new ResponseEntity(s, HttpStatus.valueOf(200));
+            responseEntity = restTemplate.postForEntity(requestUrl, requestEntity, String.class);
         } catch (Exception e) {
             //调用API失败，错误处理
             throw new RuntimeException(e);
@@ -874,8 +897,6 @@ public class myTest {
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.set("Content-Type", "application/json");
         Map<String, Object> map = new HashMap<>();
-        // map.put("imageUrl", "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1603453778189&di=4bced91c91c145f24fbafe88709d2e1f&imgtype=0&src=http%3A%2F%2Fpic3.58cdn.com.cn%2Fzhuanzh%2Fn_v280dc7d059374496ca9a4379ba9681dc8.jpg%3Fw%3D750%26h%3D0");
-        // imageUrl
         map.put("imageBase64Str", imageBase64(data));
         HttpEntity<Object> requestEntity = new HttpEntity<>(map, httpHeaders);
 
