@@ -45,7 +45,7 @@ import java.util.*;
  * {@link NeuhubAIDemoTester#selfieSegmentation()} 自拍人像抠图接口
  * {@link NeuhubAIDemoTester#sentiment()} 情感分析接口
  * {@link NeuhubAIDemoTester#sexyGet()} 智能鉴黄(GET请求)接口
- * {@link NeuhubAIDemoTester#sexyPost()} 智能鉴黄(POST请求)接口
+ * {@link NeuhubAIDemoTester#localCvImage()} 智能鉴黄(POST请求)接口
  * {@link NeuhubAIDemoTester#similarity()} 短文本相似度接口
  * {@link NeuhubAIDemoTester#snapShop()} 拍照购接口
  * {@link NeuhubAIDemoTester#textClassification()} 文本分类接口
@@ -353,7 +353,7 @@ public class NeuhubAIDemoTester {
     @Test
     public void sexyGet() {
         //image_url后为待测试的图片的路径
-        String requestUrl = gatewayUrl + "/neuhub/cvImage?image_url=http://img.mp.itc.cn/upload/20170109/67793cdf254848d8a0e59a4f6e034534_th.jpg";
+        String requestUrl = gatewayUrl + "/neuhub/cvImage?image_url=https://smartpart-public.s3.cn-north-1.jdcloud-oss.com/Demo1.jpg";
         ResponseEntity<String> responseEntity = null;
         try {
             responseEntity = restTemplate.getForEntity(requestUrl, String.class);
@@ -365,7 +365,7 @@ public class NeuhubAIDemoTester {
     }
 
     @Test
-    public void sexyPost() {
+    public void localCvImage() {
         byte[] data = dataBinary(picture);
         HttpEntity<Object> requestEntity = new HttpEntity<>(data);
         String requestUrl = gatewayUrl + "/neuhub/localCvImage";
