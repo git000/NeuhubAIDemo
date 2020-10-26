@@ -27,8 +27,8 @@ import java.util.*;
  * {@link NeuhubAIDemoTester#asr()} 语音识别接口
  * {@link NeuhubAIDemoTester#comment()} 评论观点抽取接口
  * {@link NeuhubAIDemoTester#faceCompare()} 人脸对比接口
- * {@link NeuhubAIDemoTester#faceDetectAttr()} 人脸检测与属性分析接口
- * {@link NeuhubAIDemoTester#faceAntiSpoof()} 人脸活体检测接口
+ * {@link NeuhubAIDemoTester#facePropV1()} 人脸检测与属性分析接口
+ * {@link NeuhubAIDemoTester#detectHacknessV1()} 人脸活体检测接口
  * {@link NeuhubAIDemoTester#food()} 菜品识别接口
  * {@link NeuhubAIDemoTester#humanDetect()} 人体检测接口
  * {@link NeuhubAIDemoTester#ocrIdCard()} 身份证识别接口
@@ -174,15 +174,22 @@ public class NeuhubAIDemoTester {
     }
 
     @Test
-    public void faceAntiSpoof() {
+    public void detectHacknessV1() {
         byte[] data = dataBinary(picture);
         String encodedText = imageBase64(data);
         String value = String.format("imageBase64=%s", encodedText);
         HttpEntity<String> requestEntity = new HttpEntity<>(value);
-        String requestUrl = gatewayUrl + "/neuhub/face_AntiSpoof";
+        String requestUrl = gatewayUrl + "/neuhub/detectHacknessV1";
+
+        //TODO  增加JSON参数，此接口暂时无法调通
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("isVisual",true);
+        map.put("imgBase64Visual",encodedText);
+        map.put("imgBase64Nir",encodedText);
+
         ResponseEntity<String> responseEntity = null;
         try {
-            responseEntity = restTemplate.postForEntity(requestUrl, requestEntity, String.class);
+            responseEntity = restTemplate.postForEntity(requestUrl, requestEntity, String.class,map);
         } catch (Exception e) {
             //调用API失败，错误处理
             throw new RuntimeException(e);
@@ -210,15 +217,19 @@ public class NeuhubAIDemoTester {
     }
 
     @Test
-    public void faceDetectAttr() {
+    public void facePropV1() {
         byte[] data = dataBinary(picture);
         String encodedText = imageBase64(data);
         String value = String.format("imageBase64=%s", encodedText);
         HttpEntity<String> requestEntity = new HttpEntity<>(value);
-        String requestUrl = gatewayUrl + "/neuhub/face_detect_attr";
+
+        //TODO 此接口增加请求体参数，暂时无法调通
+        Map <String,Object> map = new HashMap<>();
+        map.put("imgBase64",encodedText);
+        String requestUrl = gatewayUrl + "/neuhub/facePropV1";
         ResponseEntity<String> responseEntity = null;
         try {
-            responseEntity = restTemplate.postForEntity(requestUrl, requestEntity, String.class);
+            responseEntity = restTemplate.postForEntity(requestUrl, requestEntity, String.class,map);
         } catch (Exception e) {
             //调用API失败，错误处理
             throw new RuntimeException(e);
@@ -635,7 +646,10 @@ public class NeuhubAIDemoTester {
         //header示例参数
         String domain = "search";
         String applicationId = "search-app";
-        String requestId = "56a847e6-84c0-4c01-bf4b-d566f2d2dd11-app";
+
+        //TODO 没有调通
+        //String requestId = "65845428-de85-11e8-9517-040973d59a1e";
+        String requestId =  UUID.randomUUID().toString();
         int sequenceId = -1;
         int asrProtocol = 1;
         int netState = 2;
@@ -674,7 +688,11 @@ public class NeuhubAIDemoTester {
     @Test
     public void tts() {
         String serviceType = "synthesis";
-        String requestId = "65845428-de85-11e8-9517-040973d59a1e";
+
+
+        //TODO 没有调通 没有返回音频编码
+        //String requestId = "65845428-de85-11e8-9517-040973d59a1e";
+        String requestId =  UUID.randomUUID().toString();
         int sequenceId = 1;
         int protocol = 1;
         int netState = 1;
@@ -689,7 +707,8 @@ public class NeuhubAIDemoTester {
         httpHeaders.set("Net-State", Integer.toString(netState));
         httpHeaders.set("Applicator", Integer.toString(applicator));
         httpHeaders.set("property", property.toString());
-        HttpEntity<String> requestEntity = new HttpEntity<>(comment, httpHeaders);
+        HttpEntity<String> requestEntity = new HttpEntity<>("你好，京东！", httpHeaders);
+
         String requestUrl = gatewayUrl + "/neuhub/tts";
         ResponseEntity<String> responseEntity = null;
         try {
