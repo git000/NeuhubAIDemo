@@ -42,13 +42,15 @@ import java.util.*;
  * {@link NeuhubAIDemoTester#politiciansRecognition()} 特定人物识别接口
  * {@link NeuhubAIDemoTester#lexer()} 词法分析接口
  * {@link NeuhubAIDemoTester#poseEstimation()} 人体关键点检测接口
- * {@link NeuhubAIDemoTester#searchFace()} 人脸搜索接口
+
  * {@link NeuhubAIDemoTester#faceGroupCreate()} 创建人脸分组接口
- *  {@link NeuhubAIDemoTester#groupFetchV1()} 获取分组列表
+ * {@link NeuhubAIDemoTester#groupFetchV1()} 获取分组列表
  * {@link NeuhubAIDemoTester#faceGroupDelete()} 删除人脸分组接口
  * {@link NeuhubAIDemoTester#faceCreate()} 创建人脸接口
  * {@link NeuhubAIDemoTester#faceDelete()} 删除人脸接口
+ * {@link NeuhubAIDemoTester#faceUpdateV1()} 修改人脸接口
  * {@link NeuhubAIDemoTester#faceFetchV1()} 获取人脸列表接口
+ * {@link NeuhubAIDemoTester#searchFace()} 人脸搜索接口
  * {@link NeuhubAIDemoTester#selfieSegmentation()} 自拍人像抠图接口
  * {@link NeuhubAIDemoTester#sentiment()} 情感分析接口
  * {@link NeuhubAIDemoTester#sexyGet()} 智能鉴黄(GET请求)接口
