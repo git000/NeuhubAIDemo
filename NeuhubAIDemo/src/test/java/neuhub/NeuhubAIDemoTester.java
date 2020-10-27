@@ -364,6 +364,9 @@ public class NeuhubAIDemoTester {
         result(responseEntity);
     }
 
+    /**
+     *
+     */
     @Test
     public void faceDelete() {
         /**
@@ -377,6 +380,32 @@ public class NeuhubAIDemoTester {
         ResponseEntity<String> responseEntity = null;
         try {
             responseEntity = restTemplate.getForEntity(requestUrl, String.class);
+        } catch (Exception e) {
+            //调用API失败，错误处理
+            throw new RuntimeException(e);
+        }
+        result(responseEntity);
+    }
+
+
+    /**
+     * 修改人脸
+     */
+    @Test
+    public void faceUpdateV1() {
+        byte[] data = dataBinary(picture);
+        String encodedText = imageBase64(data);
+        String groupId = "5f9698af6feeeab9f228b8aa";
+        String faceId = "5f969a3f6feeeab9f228b8b8";
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("faceId", faceId);
+        map.put("imgBase64", encodedText);
+        map.put("groupId", groupId);
+        HttpEntity<Object> requestEntity = new HttpEntity<>(map);
+        String requestUrl = gatewayUrl + "/neuhub/faceUpdateV1";
+        ResponseEntity<String> responseEntity = null;
+        try {
+            responseEntity = restTemplate.postForEntity(requestUrl,requestEntity, String.class,map);
         } catch (Exception e) {
             //调用API失败，错误处理
             throw new RuntimeException(e);
