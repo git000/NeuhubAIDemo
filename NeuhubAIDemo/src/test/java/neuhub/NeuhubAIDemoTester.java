@@ -239,19 +239,15 @@ public class NeuhubAIDemoTester {
     public void detectHacknessV1() {
         byte[] data = dataBinary(picture);
         String encodedText = imageBase64(data);
-        String value = String.format("imageBase64=%s", encodedText);
-        HttpEntity<String> requestEntity = new HttpEntity<>(value);
         String requestUrl = gatewayUrl + "/neuhub/detectHacknessV1";
-
-        //TODO  增加JSON参数，此接口暂时无法调通
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("isVisual", true);
         map.put("imgBase64Visual", encodedText);
         map.put("imgBase64Nir", encodedText);
-
+        HttpEntity requestEntity = new HttpEntity(map);
         ResponseEntity<String> responseEntity = null;
         try {
-            responseEntity = restTemplate.postForEntity(requestUrl, requestEntity, String.class, map);
+            responseEntity = restTemplate.postForEntity(requestUrl, requestEntity, String.class);
         } catch (Exception e) {
             //调用API失败，错误处理
             throw new RuntimeException(e);
