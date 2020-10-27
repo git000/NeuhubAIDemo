@@ -43,7 +43,7 @@ import java.util.*;
  * {@link NeuhubAIDemoTester#poseEstimation()} 人体关键点检测接口
  * {@link NeuhubAIDemoTester#searchFace()} 人脸搜索接口
  * {@link NeuhubAIDemoTester#faceGroupCreate()} 创建人脸分组接口
- *  * * * {@link NeuhubAIDemoTester#groupFetchV1()} 获取分组列表
+ *  {@link NeuhubAIDemoTester#groupFetchV1()} 获取分组列表
  * {@link NeuhubAIDemoTester#faceGroupDelete()} 删除人脸分组接口
  * {@link NeuhubAIDemoTester#faceCreate()} 创建人脸接口
  * {@link NeuhubAIDemoTester#faceDelete()} 删除人脸接口
@@ -356,14 +356,44 @@ public class NeuhubAIDemoTester {
         result(responseEntity);
     }
 
+
+    /**
+     * 修改分组
+     */
+    @Test
+    public void groupUpdateV1() {
+
+        //TODO 此接口掉不通 返回code为1 参数缺失
+        //调用 faceGroupCreate() 接口创建分组ID
+        String groupId = "5f97800a88aaae165438cca6";
+        String groupName = "zjwUpdate";
+        Map<String,Object> map = new HashMap();
+        map.put("groupId",groupId);
+        map.put("groupName",groupName);
+        //调用创建分组接口
+        HttpEntity<Object> requestEntity = new HttpEntity<>(map);
+        String requestUrl = gatewayUrl + "/neuhub/groupUpdateV1?groupId={groupId}&groupName={groupName}";
+        ResponseEntity<String> responseEntity = null;
+        try {
+            responseEntity = restTemplate.postForEntity(requestUrl, requestEntity, String.class,map);
+        } catch (Exception e) {
+            //调用API失败，错误处理
+            throw new RuntimeException(e);
+        }
+        result(responseEntity);
+    }
+
+
+    /**
+     * 删除分组
+     */
     @Test
     public void faceGroupDelete() {
-        /**
-         * groupId 为待删除的分组ID
-         */
-        String groupId = "5249f5d4-96ad-46b5-8e88-1e51be2d20c8";
+
+        //分组ID
+        String groupId = "5f96a0416feeeab9f228b8d7";
         HttpEntity<Object> requestEntity = new HttpEntity<>(null, null);
-        String requestUrl = gatewayUrl + "/neuhub/faceGroupDelete?groupId={groupId}";
+        String requestUrl = gatewayUrl + "/neuhub/groupDeleteV1?groupId={groupId}";
         ResponseEntity<String> responseEntity = null;
         try {
             responseEntity = restTemplate.postForEntity(requestUrl, requestEntity, String.class, groupId);
