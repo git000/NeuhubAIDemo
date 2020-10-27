@@ -48,7 +48,7 @@ import java.util.*;
  * {@link NeuhubAIDemoTester#faceGroupDelete()} 删除人脸分组接口
  * {@link NeuhubAIDemoTester#faceCreate()} 创建人脸接口
  * {@link NeuhubAIDemoTester#faceDelete()} 删除人脸接口
- * {@link NeuhubAIDemoTester#getFaceGroupList()} 获取人脸分组列表接口
+ * {@link NeuhubAIDemoTester#faceFetchV1()} 获取人脸列表接口
  * {@link NeuhubAIDemoTester#selfieSegmentation()} 自拍人像抠图接口
  * {@link NeuhubAIDemoTester#sentiment()} 情感分析接口
  * {@link NeuhubAIDemoTester#sexyGet()} 智能鉴黄(GET请求)接口
@@ -391,7 +391,6 @@ public class NeuhubAIDemoTester {
     @Test
     public void groupUpdateV1() {
 
-        //TODO 此接口掉不通 返回code为1 参数缺失
         //调用 faceGroupCreate() 接口创建分组ID
         String groupId = "5f97800a88aaae165438cca6";
         String groupName = "zjwUpdate";
@@ -432,21 +431,23 @@ public class NeuhubAIDemoTester {
         result(responseEntity);
     }
 
+    /**
+     * 获取人脸
+     */
     @Test
-    public void getFaceGroupList() {
-        /**
-         * start为查询起始位置，length为从查询起始位置开始查询的长度
-         */
-        int start = 0;
-        int length = 5;
+    public void faceFetchV1() {
+        int pageId = 0;
+        int pageSize = 10;
+        String groupId = "5f9698af6feeeab9f228b8aa";
         HttpEntity<Object> requestEntity = new HttpEntity<>(null, null);
-        String requestUrl = gatewayUrl + "/neuhub/getFaceGroupList?start={start}&length={length}";
-        Map<String, Object> urlVariables = new HashMap<String, Object>();
-        urlVariables.put("start", start);
-        urlVariables.put("length", length);
+        String requestUrl = gatewayUrl + "/neuhub/faceFetchV1?groupId={groupId}&pageId={pageId}&pageSize={pageSize}";
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("groupId", groupId);
+        map.put("pageId", pageId);
+        map.put("pageSize", pageSize);
         ResponseEntity<String> responseEntity = null;
         try {
-            responseEntity = restTemplate.postForEntity(requestUrl, requestEntity, String.class, urlVariables);
+            responseEntity = restTemplate.postForEntity(requestUrl, requestEntity, String.class, map);
         } catch (Exception e) {
             //调用API失败，错误处理
             throw new RuntimeException(e);
