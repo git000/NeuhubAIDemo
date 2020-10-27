@@ -834,8 +834,6 @@ public class NeuhubAIDemoTester {
     public void tts() {
         String serviceType = "synthesis";
 
-
-        //TODO 没有调通 没有返回音频编码
         //String requestId = "65845428-de85-11e8-9517-040973d59a1e";
         String requestId = UUID.randomUUID().toString();
         int sequenceId = 1;
@@ -852,7 +850,10 @@ public class NeuhubAIDemoTester {
         httpHeaders.set("Net-State", Integer.toString(netState));
         httpHeaders.set("Applicator", Integer.toString(applicator));
         httpHeaders.set("property", property.toString());
-        HttpEntity<String> requestEntity = new HttpEntity<>("你好，京东！", httpHeaders);
+
+        Map <String,Object> map = new HashMap<String,Object>();
+        map.put("body","你好，京东！");
+        HttpEntity requestEntity = new HttpEntity(map, httpHeaders);
 
         String requestUrl = gatewayUrl + "/neuhub/tts";
         ResponseEntity<String> responseEntity = null;
