@@ -282,16 +282,14 @@ public class NeuhubAIDemoTester {
     public void facePropV1() {
         byte[] data = dataBinary(picture);
         String encodedText = imageBase64(data);
-        String value = String.format("imageBase64=%s", encodedText);
-        HttpEntity<String> requestEntity = new HttpEntity<>(value);
 
-        //TODO 此接口增加请求体参数，暂时无法调通
         Map<String, Object> map = new HashMap<>();
         map.put("imgBase64", encodedText);
+        HttpEntity requestEntity = new HttpEntity(map);
         String requestUrl = gatewayUrl + "/neuhub/facePropV1";
         ResponseEntity<String> responseEntity = null;
         try {
-            responseEntity = restTemplate.postForEntity(requestUrl, requestEntity, String.class, map);
+            responseEntity = restTemplate.postForEntity(requestUrl, requestEntity, String.class);
         } catch (Exception e) {
             //调用API失败，错误处理
             throw new RuntimeException(e);
