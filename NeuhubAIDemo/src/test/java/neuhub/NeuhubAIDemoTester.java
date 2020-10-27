@@ -532,11 +532,16 @@ public class NeuhubAIDemoTester {
         result(responseEntity);
     }
 
+    /**
+     * 菜品识别
+     * @throws Exception
+     */
     @Test
-    public void food() throws Exception {
+    public void foodApi() throws Exception {
         byte[] data = dataBinary(picture);
         String encodedText = imageBase64(data);
-        // Picture类为自创的实体类
+
+        // TODO 菜品识别调用失败 返回11010
         Picture pic = new Picture(encodedText);
         ObjectMapper objectMapper = new ObjectMapper();
         String value = objectMapper.writeValueAsString(pic);
