@@ -47,7 +47,7 @@ import java.util.*;
  * {@link NeuhubAIDemoTester#groupFetchV1()} 获取分组列表
  * {@link NeuhubAIDemoTester#faceGroupDelete()} 删除人脸分组接口
  * {@link NeuhubAIDemoTester#faceCreate()} 创建人脸接口
- * {@link NeuhubAIDemoTester#faceDelete()} 删除人脸接口
+ * {@link NeuhubAIDemoTester#faceDeleteV1()} 删除人脸接口
  * {@link NeuhubAIDemoTester#faceUpdateV1()} 修改人脸接口
  * {@link NeuhubAIDemoTester#faceFetchV1()} 获取人脸列表接口
  * {@link NeuhubAIDemoTester#searchFace()} 人脸搜索接口
@@ -367,21 +367,18 @@ public class NeuhubAIDemoTester {
     }
 
     /**
-     *
+     *删除人脸接口
      */
     @Test
-    public void faceDelete() {
-        /**
-         * groupId  需要调接口去创建 {@link NeuhubAIDemoTester#faceGroupCreate()}
-         * outerId  待删除的人脸图片的id值
-         */
-        String groupId = "bfaca672-d954-4207-8e35-26aeeb276d71";
-        String outerId = "0726testFace1";
-        HttpEntity<Object> requestEntity = new HttpEntity<>(null, null);
-        String requestUrl = gatewayUrl + "/neuhub/faceDelete?groupId=c0a0ed2b-a355-48c7-a4f7-c702fda26308&groupName=&outerId=0726testFace1";
+    public void faceDeleteV1() {
+        String faceId = "5f969a3f6feeeab9f228b8b8";
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("faceId", faceId);
+        HttpEntity<Object> requestEntity = new HttpEntity<>(null);
+        String requestUrl = gatewayUrl + "/neuhub/faceDeleteV1?faceId={faceId}";
         ResponseEntity<String> responseEntity = null;
         try {
-            responseEntity = restTemplate.getForEntity(requestUrl, String.class);
+            responseEntity = restTemplate.postForEntity(requestUrl,requestEntity, String.class,map);
         } catch (Exception e) {
             //调用API失败，错误处理
             throw new RuntimeException(e);
