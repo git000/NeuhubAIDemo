@@ -1657,7 +1657,8 @@ public class NeuhubAIDemoTester {
 
     @Test
     public void phrase_extract() {
-        String requestUrl = gatewayUrl + "/neuhub/phrase_extract?document=算法工程师的算法能力特别重要";
+        String requestUrl = gatewayUrl + "/fagougou/phrase_extract?document=算法工程师的算法能力特别重要";
+        // String requestUrl = gatewayUrl + "/neuhub/phrase_extract?document=算法工程师的算法能力特别重要";
         ResponseEntity<String> responseEntity = null;
         try {
             responseEntity = restTemplate.getForEntity(requestUrl, String.class);
