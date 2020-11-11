@@ -32,17 +32,15 @@ import java.util.*;
 /**
  * {@link NeuhubAIDemoTester#asr()} 语音识别接口
  * {@link NeuhubAIDemoTester#comment()} 评论观点抽取接口
- * {@link NeuhubAIDemoTester#faceCompare()} 人脸对比接口
  * {@link NeuhubAIDemoTester#facePropV1()} 人脸检测与属性分析接口
  * {@link NeuhubAIDemoTester#detectHacknessV1()} 人脸活体检测接口
- * {@link NeuhubAIDemoTester#food()} 菜品识别接口
+ * {@link NeuhubAIDemoTester#foodApi()} 菜品识别接口
  * {@link NeuhubAIDemoTester#humanDetect()} 人体检测接口
  * {@link NeuhubAIDemoTester#ocrIdCard()} 身份证识别接口
  * {@link NeuhubAIDemoTester#ocrInvoice()} 增值税发票识别接口
  * {@link NeuhubAIDemoTester#politiciansRecognition()} 特定人物识别接口
  * {@link NeuhubAIDemoTester#lexer()} 词法分析接口
  * {@link NeuhubAIDemoTester#poseEstimation()} 人体关键点检测接口
-
  * {@link NeuhubAIDemoTester#faceGroupCreate()} 创建人脸分组接口
  * {@link NeuhubAIDemoTester#groupFetchV1()} 获取分组列表
  * {@link NeuhubAIDemoTester#faceGroupDelete()} 删除人脸分组接口
@@ -71,8 +69,6 @@ import java.util.*;
  * {@link NeuhubAIDemoTester#vehicleDetection()} 车辆检测接口
  * {@link NeuhubAIDemoTester#imageSearchIndex()} 通用图片搜索图片入库
  * {@link NeuhubAIDemoTester#imageSearchTask()} 通用图片搜索任务状态查询
- * {@link NeuhubAIDemoTester#imageSearch()} 通用图片搜索
- * {@link NeuhubAIDemoTester#universalForPesticide()} 化肥农药袋子识别
  * {@link NeuhubAIDemoTester#extract_img_colors()} 颜色识别
  * {@link NeuhubAIDemoTester#detect_shelf_product()} 货架商品检测
  * {@link NeuhubAIDemoTester#recommend_outfits()} 搭配生成
@@ -255,24 +251,6 @@ public class NeuhubAIDemoTester {
         result(responseEntity);
     }
 
-    @Test
-    public void faceCompare() {
-        byte[] face1Data = dataBinary(picture);
-        byte[] face2Data = dataBinary(pictureCompare);
-        String face1 = imageBase64(face1Data);
-        String face2 = imageBase64(face2Data);
-        String param = String.format("imageBase64_1=%s&imageBase64_2=%s", face1, face2);
-        HttpEntity<String> requestEntity = new HttpEntity<>(param);
-        String requestUrl = gatewayUrl + "/neuhub/face_compare";
-        ResponseEntity<String> responseEntity = null;
-        try {
-            responseEntity = restTemplate.postForEntity(requestUrl, requestEntity, String.class);
-        } catch (Exception e) {
-            //调用API失败，错误处理
-            throw new RuntimeException(e);
-        }
-        result(responseEntity);
-    }
 
     @Test
     public void facePropV1() {
@@ -1087,27 +1065,7 @@ public class NeuhubAIDemoTester {
         result(responseEntity);
     }
 
-    @Test
-    public void imageSearch() {
 
-        byte[] data = dataBinary(picture);
-        String imageBase64 = imageBase64(data);
-        String requestUrl = gatewayUrl + "/neuhub/search";
-
-        Map<String, Object> map = new HashMap<>();
-        map.put("collection_name", comment);
-        map.put("query_content", imageBase64);
-        map.put("top_k", 50);
-        HttpEntity<Map<String, Object>> requestEntity = new HttpEntity<>(map);
-        ResponseEntity<String> responseEntity = null;
-        try {
-            responseEntity = restTemplate.postForEntity(requestUrl, requestEntity, String.class);
-        } catch (Exception e) {
-            //调用API失败，错误处理
-            throw new RuntimeException(e);
-        }
-        result(responseEntity);
-    }
 
     public static String encodeImgageToBase64(String url) {
         // 将图片文件转化为字节数组字符串，并对其进行Base64编码处理
@@ -2901,22 +2859,7 @@ public class NeuhubAIDemoTester {
             result(responseEntity);
         }
 
-    @Test
-    public void universalForPesticide() {
-        byte[] data = dataBinary(picture);
-        String imageBase64 = imageBase64(data);
-        String value = String.format("imageBase64Str=%s", imageBase64);
-        HttpEntity<String> requestEntity = new HttpEntity<>(value);
-        String requestUrl = gatewayUrl + "/neuhub/universalForPesticide";
-        ResponseEntity<String> responseEntity = null;
-        try {
-            responseEntity = restTemplate.postForEntity(requestUrl, requestEntity, String.class);
-        } catch (Exception e) {
-            //调用API失败，错误处理
-            throw new RuntimeException(e);
-        }
-        result(responseEntity);
-    }
+
 
     private String imageBase64(byte[] data) {
         Base64.Encoder encoder = Base64.getEncoder();
