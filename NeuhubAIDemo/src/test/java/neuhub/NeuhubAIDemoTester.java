@@ -279,7 +279,7 @@ public class NeuhubAIDemoTester {
          * groupName为用户创建分组的名称，根据分组名称完成创建后可以获得groupId，
          * 通过{@link NeuhubAIDemoTester#getFaceGroupList()} 查看分组信息
          */
-        String groupName = "zhoujiaweiTest";
+        String groupName = "aabbccdd";
         HttpEntity<Object> requestEntity = new HttpEntity<>(null, null);
         String requestUrl = gatewayUrl + "/neuhub/groupCreateV1?groupName={groupName}";
         ResponseEntity<String> responseEntity = null;
@@ -1023,9 +1023,9 @@ public class NeuhubAIDemoTester {
         result(responseEntity);
     }
 
-    @Test
-    public void imageSearchIndex() {
 
+   /* @Test
+    public void imageSearchIndex() {
         byte[] data = dataBinary(picture);
         String imageBase64 = imageBase64(data);
         String requestUrl = gatewayUrl + "/neuhub/index";
@@ -1047,7 +1047,7 @@ public class NeuhubAIDemoTester {
             throw new RuntimeException(e);
         }
         result(responseEntity);
-    }
+    }*/
 
     @Test
     public void imageSearchTask() {
@@ -1810,9 +1810,9 @@ public class NeuhubAIDemoTester {
             result(responseEntity);
         }
 
-        /**
+     /*   *//**
          * 调用结果: {"code":"10000","charge":true,"remain":499,"remainTimes":499,"remainSeconds":-1,"msg":"查询成功,扣费","result":{"message":"success","request_id":"c2b21a148bc6ee541cadbfa1bcb999cd","resultData":{"owner":"李丽","code":"903","address":"北京市朝围区来广营西路8号国创产业国监号楼二层东责区","money":"1463.4万元","registration_code":"","composition":"","business_type":"股份有限公司(非上市、自然人投资或控股)","name":"汉唐信通(北京咨询股份有限公司","valid_time":"2006年05月22日至2056年05月21日","registration_time":"2006年05月22日"},"code":0}}
-         */
+         *//*
         // 营业执照识别	/neuhub/ocr_business
         @Test
         public void ocr_business() {
@@ -1829,13 +1829,13 @@ public class NeuhubAIDemoTester {
                 throw new RuntimeException(e);
             }
             result(responseEntity);
-        }
+        }*/
 
         /**
          * 调用结果: {"code":"10000","charge":true,"remain":499,"remainTimes":499,"remainSeconds":-1,"msg":"查询成功,扣费","result":{"code":"0","message":"success","request_id":"f7d18c9c2d814cf6b9a72d46411b5870","result":{"bank_date":"","bank_name":"","bank_number":"5550472687299","card_count":"","card_name":"","card_type":""}}}
          */
         // 银行卡识别	/neuhub/ocr_bankcard
-        @Test
+  /*      @Test
         public void ocr_bankcard() {
             byte[] data = dataBinary(picture);
             HttpEntity<Object> requestEntity = new HttpEntity<>(data);
@@ -1850,7 +1850,7 @@ public class NeuhubAIDemoTester {
                 throw new RuntimeException(e);
             }
             result(responseEntity);
-        }
+        }*/
 
         /**
          * < 200, {
@@ -2646,7 +2646,7 @@ public class NeuhubAIDemoTester {
          * }
          * }
          */
-        @Test
+  /*      @Test
         public void vehicle_detection() {
             HttpHeaders httpHeaders = new HttpHeaders();
             httpHeaders.set("Content-Type", "application/octet-stream");
@@ -2663,7 +2663,7 @@ public class NeuhubAIDemoTester {
                 throw new RuntimeException(e);
             }
             result(responseEntity);
-        }
+        }*/
 
         /**
          * 调用结果: {
