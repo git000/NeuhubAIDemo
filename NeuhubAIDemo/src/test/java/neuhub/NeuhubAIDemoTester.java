@@ -32,17 +32,15 @@ import java.util.*;
 /**
  * {@link NeuhubAIDemoTester#asr()} 语音识别接口
  * {@link NeuhubAIDemoTester#comment()} 评论观点抽取接口
- * {@link NeuhubAIDemoTester#faceCompare()} 人脸对比接口
  * {@link NeuhubAIDemoTester#facePropV1()} 人脸检测与属性分析接口
  * {@link NeuhubAIDemoTester#detectHacknessV1()} 人脸活体检测接口
- * {@link NeuhubAIDemoTester#food()} 菜品识别接口
+ * {@link NeuhubAIDemoTester#foodApi()} 菜品识别接口
  * {@link NeuhubAIDemoTester#humanDetect()} 人体检测接口
  * {@link NeuhubAIDemoTester#ocrIdCard()} 身份证识别接口
  * {@link NeuhubAIDemoTester#ocrInvoice()} 增值税发票识别接口
  * {@link NeuhubAIDemoTester#politiciansRecognition()} 特定人物识别接口
  * {@link NeuhubAIDemoTester#lexer()} 词法分析接口
  * {@link NeuhubAIDemoTester#poseEstimation()} 人体关键点检测接口
-
  * {@link NeuhubAIDemoTester#faceGroupCreate()} 创建人脸分组接口
  * {@link NeuhubAIDemoTester#groupFetchV1()} 获取分组列表
  * {@link NeuhubAIDemoTester#faceGroupDelete()} 删除人脸分组接口
@@ -71,8 +69,6 @@ import java.util.*;
  * {@link NeuhubAIDemoTester#vehicleDetection()} 车辆检测接口
  * {@link NeuhubAIDemoTester#imageSearchIndex()} 通用图片搜索图片入库
  * {@link NeuhubAIDemoTester#imageSearchTask()} 通用图片搜索任务状态查询
- * {@link NeuhubAIDemoTester#imageSearch()} 通用图片搜索
- * {@link NeuhubAIDemoTester#universalForPesticide()} 化肥农药袋子识别
  * {@link NeuhubAIDemoTester#extract_img_colors()} 颜色识别
  * {@link NeuhubAIDemoTester#detect_shelf_product()} 货架商品检测
  * {@link NeuhubAIDemoTester#recommend_outfits()} 搭配生成
@@ -111,7 +107,6 @@ import java.util.*;
  * {@link NeuhubAIDemoTester#mask_detect()} 人脸口罩识别
  * {@link NeuhubAIDemoTester#faceCompareV1()} 人脸对比
  * {@link NeuhubAIDemoTester#personreid()} 行人重识别接口
- * {@link NeuhubAIDemoTester#human_parsing()} 细粒度人像分割
  * {@link NeuhubAIDemoTester#face_parser()} 人脸解析
  * {@link NeuhubAIDemoTester#censor_image()} 通用图片审核
  * {@link NeuhubAIDemoTester#censor_text()} 文本智能审核
@@ -255,24 +250,6 @@ public class NeuhubAIDemoTester {
         result(responseEntity);
     }
 
-    @Test
-    public void faceCompare() {
-        byte[] face1Data = dataBinary(picture);
-        byte[] face2Data = dataBinary(pictureCompare);
-        String face1 = imageBase64(face1Data);
-        String face2 = imageBase64(face2Data);
-        String param = String.format("imageBase64_1=%s&imageBase64_2=%s", face1, face2);
-        HttpEntity<String> requestEntity = new HttpEntity<>(param);
-        String requestUrl = gatewayUrl + "/neuhub/face_compare";
-        ResponseEntity<String> responseEntity = null;
-        try {
-            responseEntity = restTemplate.postForEntity(requestUrl, requestEntity, String.class);
-        } catch (Exception e) {
-            //调用API失败，错误处理
-            throw new RuntimeException(e);
-        }
-        result(responseEntity);
-    }
 
     @Test
     public void facePropV1() {
@@ -302,7 +279,7 @@ public class NeuhubAIDemoTester {
          * groupName为用户创建分组的名称，根据分组名称完成创建后可以获得groupId，
          * 通过{@link NeuhubAIDemoTester#getFaceGroupList()} 查看分组信息
          */
-        String groupName = "zhoujiaweiTest";
+        String groupName = "aabbccdd";
         HttpEntity<Object> requestEntity = new HttpEntity<>(null, null);
         String requestUrl = gatewayUrl + "/neuhub/groupCreateV1?groupName={groupName}";
         ResponseEntity<String> responseEntity = null;
@@ -1046,9 +1023,9 @@ public class NeuhubAIDemoTester {
         result(responseEntity);
     }
 
-    @Test
-    public void imageSearchIndex() {
 
+   /* @Test
+    public void imageSearchIndex() {
         byte[] data = dataBinary(picture);
         String imageBase64 = imageBase64(data);
         String requestUrl = gatewayUrl + "/neuhub/index";
@@ -1070,7 +1047,7 @@ public class NeuhubAIDemoTester {
             throw new RuntimeException(e);
         }
         result(responseEntity);
-    }
+    }*/
 
     @Test
     public void imageSearchTask() {
@@ -1087,27 +1064,7 @@ public class NeuhubAIDemoTester {
         result(responseEntity);
     }
 
-    @Test
-    public void imageSearch() {
 
-        byte[] data = dataBinary(picture);
-        String imageBase64 = imageBase64(data);
-        String requestUrl = gatewayUrl + "/neuhub/search";
-
-        Map<String, Object> map = new HashMap<>();
-        map.put("collection_name", comment);
-        map.put("query_content", imageBase64);
-        map.put("top_k", 50);
-        HttpEntity<Map<String, Object>> requestEntity = new HttpEntity<>(map);
-        ResponseEntity<String> responseEntity = null;
-        try {
-            responseEntity = restTemplate.postForEntity(requestUrl, requestEntity, String.class);
-        } catch (Exception e) {
-            //调用API失败，错误处理
-            throw new RuntimeException(e);
-        }
-        result(responseEntity);
-    }
 
     public static String encodeImgageToBase64(String url) {
         // 将图片文件转化为字节数组字符串，并对其进行Base64编码处理
@@ -1853,9 +1810,9 @@ public class NeuhubAIDemoTester {
             result(responseEntity);
         }
 
-        /**
+     /*   *//**
          * 调用结果: {"code":"10000","charge":true,"remain":499,"remainTimes":499,"remainSeconds":-1,"msg":"查询成功,扣费","result":{"message":"success","request_id":"c2b21a148bc6ee541cadbfa1bcb999cd","resultData":{"owner":"李丽","code":"903","address":"北京市朝围区来广营西路8号国创产业国监号楼二层东责区","money":"1463.4万元","registration_code":"","composition":"","business_type":"股份有限公司(非上市、自然人投资或控股)","name":"汉唐信通(北京咨询股份有限公司","valid_time":"2006年05月22日至2056年05月21日","registration_time":"2006年05月22日"},"code":0}}
-         */
+         *//*
         // 营业执照识别	/neuhub/ocr_business
         @Test
         public void ocr_business() {
@@ -1872,13 +1829,13 @@ public class NeuhubAIDemoTester {
                 throw new RuntimeException(e);
             }
             result(responseEntity);
-        }
+        }*/
 
         /**
          * 调用结果: {"code":"10000","charge":true,"remain":499,"remainTimes":499,"remainSeconds":-1,"msg":"查询成功,扣费","result":{"code":"0","message":"success","request_id":"f7d18c9c2d814cf6b9a72d46411b5870","result":{"bank_date":"","bank_name":"","bank_number":"5550472687299","card_count":"","card_name":"","card_type":""}}}
          */
         // 银行卡识别	/neuhub/ocr_bankcard
-        @Test
+  /*      @Test
         public void ocr_bankcard() {
             byte[] data = dataBinary(picture);
             HttpEntity<Object> requestEntity = new HttpEntity<>(data);
@@ -1893,7 +1850,7 @@ public class NeuhubAIDemoTester {
                 throw new RuntimeException(e);
             }
             result(responseEntity);
-        }
+        }*/
 
         /**
          * < 200, {
@@ -2195,23 +2152,7 @@ public class NeuhubAIDemoTester {
             result(responseEntity);
         }
 
-        // 细粒度人像分割	/neuhub/human_parsing
-        @Test
-        public void human_parsing() {
-            byte[] data = dataBinary(picture);
-            HttpEntity<Object> requestEntity = new HttpEntity<>(data);
 
-            //以下参数仅为示例值
-            String requestUrl = gatewayUrl + "/neuhub/human_parsing";
-            ResponseEntity<String> responseEntity = null;
-            try {
-                responseEntity = restTemplate.postForEntity(requestUrl, requestEntity, String.class);
-            } catch (Exception e) {
-                //调用API失败，错误处理
-                throw new RuntimeException(e);
-            }
-            result(responseEntity);
-        }
 
         /**
          * 调用结果: {"code":"10000","charge":true,"remain":998,"remainTimes":998,"remainSeconds":-1,"msg":"查询成功,扣费","result":[{"image":"iVBORw0KGgoAAAANSUhEUgAAAfQAAAICCAAAAAAcnmDPAAASgElEQVR4nO2d2XbbyA5FocTJ6uT/v9XK6tux7oM8aCClGjAcoM5+6bQHugqbB1UkJfsgqfgdPYAtXqMH0Mu36AEQfw7RA+gBMueSL+pZpKP6fieX9hzSwZWL5NKeQXoC5SKZtONLT6JcEllHl55HuUga7eDSczmXJNqhpadTLpJCO7L0lM4lgXZc6VmVi8BrR5WeWbkIuHZQ6dmdC7R2SOkFlAuydUDpNZQLsHU86WWcC6x2NOmVlIuAagd7EUU155gTwko6ZIlmwQs7VNJLOgecFVDS8YqjBljYcaQXdi5g2mHae23nWNNDSTpUUWzACTtI0hdwDjRHDOk49bAEZpYQ7R2mGuZgtHiEpK/jHGSqANIxCuEExGTjpUOUwQ+E6YZLRyiCKwATjpYOUAJv4qccu3uPn38MwZv40KSv6jx64pHSl3UePfVA6Qs7D5589EZuWSKtx0lfOugSOv8w6as7j6xAlHQ6D6xBkHQ6F4mrQox0Oj8TVIcQ6XT+QUwleMkWS4j1COkMejD+D1yo/Ab/py/uSafzW/wr4i2dzgFwlk7nG7gXxVc6nW/iXRZX6XS+g3NhPKXT+S6+pXGUTucPcC0O78iB4GndTzqD/hjH+rhJp/Nn+FXISzqdA8E1HQe3YDhJZ9Bb8KqSj3Q6b8OpTi7S6bwVn0pxTV8QD+kMejsutWLSwfCw7iCdQUfDXjqd9+FQL3PpdN6LfcW4pi+ItXQGvR/zmhlLp3NEbKXT+RDWZeOaviCm0hn0QYwLZymdzkFhe4fENi+G0hl0VJh0TEwTYyedQYfFTDqdz2FZP7b3BbH69SMIQT8+/vQvn1EMY/drSYykxzp/YvsaXPdm1l9MjhrnvMv353fgijfBJulB0vuNf4Ho3SrqJtJDnM8YP4Pn3ci6RXuPcD6vXOSI6N0Cg6T7O9cw/gmUd5uo6yfd3bmq8iXynv/mjLJzEZGjwTHHsEmQetKdg26k51g67epruqt000RiaLdY1bXbex3nQE1eG+X27unc3knVJp93I+eSw/i0W8RId033C7qjjOi066/qNg9crHHNX70mr9revYLu3XPjm7wuGdf0AAWR2vWjpCndJ+hB9a8UdsWNnJNzl5+ySdjSrr2Vy9beIwNXJux6SXcJenTdg8KuHPVcSY92HjUA5UCpSfcIerhziCHMoyV9EedRg9Atb6L2DuEcZhgzKG3kHIIOVOyI7ZzmXk4n6Ws5DxmLZomztHck52ij6UZFun3Q0aocMB7FIudIOppzxBF1oCHdPOiIFfYfk16ZcyQdEcQzsREF6UsGXQKGpVboBEkHdZ7YegLpuMCejk+Yl27d3ZEr6z02pVrDJx3ZOfro9piWjvBrpAJJaR096fBF9R2gTsRmpRsHHd55iiHegp70BLhaVwkZtvQcKcoxygsmpS++jXvH07pGxaGTniZCaQZ6Zk46g/5OLuvISc9USb+xKgQNWToxYkq6bXfPFPRco2XStUhkHVd6oiKe8RrwfH+dkc69e1Jgk54u6ImGDCs9I07WpzvshHTT7p4mNVckGTWTviDj0hn0DXKMm0nXJYV1TOkpSreNx9Bnm+ywdF6k5wUy6YmDnmLwo9IZ9F3wrSMmHb9qj4EfP6L09Jhbn+yzg9Ituzt8UNLDpFsAft6OSWfQn4A9CSbdBmPrc6mDk46dkRoMSedF+nOQT160pCPXqg/gmaBJJ21MNdsR6YbdHTge3eDOhUm3A9Y6lnTYMo1hOZ2ZdjsgnXv3ZkBPYqikg9ZoAsMZTWQPSjrxAUl6vaCDzqlfOpf0Luysj4sASjpkKOYBnBaQ9KqYWR+OOo50wEQoATczHOmkm9God0vnPq4ftKjDJB2tMKqATQ5Gem2MrA+2XRTpYFmoDYr06kCd1JTuBJL1XulGm3ekkhhhMsUxHUy6GzgnNoZ0nHpYAjNLDOmLYGB9qL9DSIeJgDUgE4WQvg4Y1indFwjrlL4gCNIhzn4vECaLIH0tAKxTuju61keu2QCkA5z6iwEgfTnCz3JKX5B46eHnvT/RU46XviLB1il9QcKlR7e6GGJnHS6d+EPpMYRGPVr6mt09mGjpyxJ5tlP6ggRLX7i7B06dSV8QSg8jLuqx0hfu7lq8DnzPi/oojDhsfOzkPooa9CZ95MSa5XA4HLacnz+x+ZkUhPU59KQ3KD0IM99HqPRnp3p7iA9B3rcb5ZvzKHrBTXpv23b2/mhdPH8OVz2o9LGF2st720bo21Pvx1/TQxnaY0VK3+3uE3uzg7X2rp3vc+8hACZ9cjtuGPeRmxrfALXDSde4ArOI+/hdLDzt3XPRu1Df7O5KV93Kl+/fvk3dudz99qArdayka5pSi7vKnWqo1R1KuvLNNRXteg8ncNo80lM2/Ruq001+rq3fHU3zYCIyutjGJb1tPdvKao/JqbSrS/p2m3WFK/UBgNr7rctdW6etr94/7Kh1iyaI0eL7Z2b0nO2qE59Op9MTVw1fsnXkdowWPoT1NCzpu929J5gnaXsONxB2BDlWALV3ERm5mdYovpMO5w8b9v1x7tb1CQa7Lor0s7bR5fek7L1NeYu9tyeHC9nJDUh/tfozLlNX1Q+9D2/m9uhL6/mrP9THb+aikr6xpE+LUWv0j4M+quwNZqOA0t5PSmHcvpzrPPbbnpzZiD5r9k6gSFd9LnYb+e5jb1jXa8l6Rxq9eh457RSu1O0fL31dxTdezl9xLebt7S16GVYFJukGzDSPz6xb247YvleWPsWb7hW1BcMdd2hXEfGOhwDAnY8Ts5Xke9hCib9+IIOM99sx6Yv0dxcCuh6TviCUnpWJbjsofa6/cx8XC5MezlgEZmI3Kp1bucQw6QsyLJ1RD2Wq/BH33pX2cd9FRP7qHGuEz9L9FzeGMTI+cPl+829/8S8b/zeufuBB21yfHZdu9lK5x3zf/JCn952SveRJfEDSZ7r7hvL3j3tpf1CwF7dOP7mhytTe94x/fNLB+7Ny5Yh7IukPnYuIfLe23lIsD+2zV04T1+m+F23fnzpv+5oJGgOCnyP/mzNjS3qjTkvrzTK7rXeWZDpt+KelSI/L5hb/4+Lf/2v4+p5Coa/sKaT35LdlH//j/v+fee+s04uh9fll1V36QHfv7NlPwn5r/POjj7ynyEYzU+/9Grk90y99YJ3e176t/J1d7QPO+6LecU9OYf+M/5RtZG+2+z0Pne999mUk51a9QeOaybtvdQd9bD++vbI/Vi4iP7bCPlgim2Vd5ToZfrH6q3YZ9lS5iMiPlp38M7D37gmki/zVufxucr5l/b+OIo3qbn3QpnNDzFn64MOWc6/uUn+7h290vpn1s8qHpUIP9xUJkv7JpUbDW297HR7Aq9Kdb1/peq997n220hx0ZLSeduBfshF1KP2eiK7Q0gPVHmtOSe8dRdw7Wyp0d71H2Ux6FhRfvpBp974cx4ub8povWfFMepruDrKoHy8+rPoyJbZ3WM6+j0cR7ZemzUnne5vsOF78Q7nOjknnu9JR4EYOn6P277Dmmr4gftIDu3v3bhxk+/6O+t8QnZTOnZwVlhlhe18Qg43c+RwN+StzdTBdDGeTft/f34d7PG5+mOziV6Hp9r6/qt9qz0T0U7nL0iH9LfgPXh9onz64CtEG4dBY01933+sS8/dj82OcFqXd+17aQbKeg+1i6Xd3tUu2150un9V66SXB/Do93no+f9Y1U5TOu3MWGHR33pFbEU3pjPokx6v/2KGa9E3r8Yv6EPl2Au3otnfErOe2Z7Gka6/pr3vBTpr3COxLxY0cEk6PK1T+yPzjA/4SSfSa9y80fifFNCbt3eeFkZleKrUADtK5nKPBNX1B1KWbLEJElepJn1jS6+4GqksnG1D6glD6glD6guhLh9q+T23Gyu7kmPQFoXRobNompS8IpT+g6qJuIB1oJ1fV2iRM+oJQ+oJQ+oJYSIdZ1KeX9KJ7AiYdGaP4UPqCqL8a1vConaj05tiXxDLpneisxyVX9bLStWxFWrfaEZeVrkbBrNtIj79oU1RVz3rRpJcQZRYdI+nxUVekxBl0Sc2kK2uKsW4XnJrSyUOspIf2d/VkFmvwTDoqhrExk15qKxeAZf0qJt2gGdfq73bSGfUZTKtXMenkCYbSS0Xdub/b1q5g0mutvxZYSi8VdVeMK1cw6eQZptIZdUyY9EY8dwrWYbGVzqhDwqQ3AvGbYpUoKD29HvP+aCyd/R2Rgkk3IX37uMRaekTUkwuyL5lT0k+u8vWtJz+PbrB/19lBPk5ex3e4KV9Vuzq3z4eDiMPnLLJaL+bco72H7OA1PdXq7eL8pmLfdzDrhN3buEdECkvX0O4fckqfZ8Z7RFt3WQurS5dR70ELOaWr0es9bOvms+ldQ3qX9sDNutOFjq+H0F9A1OY99PqM0vV5qr3k75K6x1lD/O8a2xcffQ/G7yaWt4V46yL35qN9i+99S3cJGNbhcL1X7fOntMljnB9P8JUzAHg/knKXzlfNxcOkx+OeA0pfEEoPx3/Bo/QFofQFofQF8ZfOa7ZwmPRoAkJA6QtC6QtC6QsSIJ07uUsiqsGkLwilL0iA9N/+P5Jc4S/9t/xy/5nkCnfpzPkVIbtarukL4i39t4iwvwfj/GpY5+b+z+5n/rR84Z/Nj2oSc8/C9WXoX8qPtj9oX/Ylf5q/1sx+fekXMTeS3iZ7HHX5MdId27tpa7fWff1T7Pu+KX7SzZz7+L77kRrigx5DOLb3K+tq/T1A+Qfz2utLv7KuJD1Quci89iDpuW/OBDufJeohc+p3rf7zUTbf9z9/ujr9/Nf1B2sRdJ2u099/7g1ff1ZboTyJzEmPSrpvRrSv1H+2TGB0is+UpHWeu73Lvz/l9NSpTW1PMus8Dt+N3KvBMWPykvqFfmG7d70nbb5/NeLiR04GPe68yX3J9l537/Kljrm4S1fv7+/WXTWcLn90RnJv5L44uV2HfJxfs84D20Xy9n5Re6e0azmPxFv6V3/Xf82Ug3W9MytyX5A+6ZeRsw77xfEzB91fuv6l+mX9LbVfHnvaeegFQGDS1fr7lQEr7VfHTZ3zCu1dbh2YaL865rzz2Ct9f+kWt2JvUC9pwE0/S0ok/S56upJuj5Y96KHSFS/a7jyc1LzfHSj5gi4h0k36+4YJDe0b546C8+jFokZ7l20Xk3Hf/Pb8OY+RbrOV27Yx7n37GzWcRwc9Num6d2L3fIxo3ztXKuQ8SLrRVduukc6473+5ivPwoAcl3du6yKlN/Knx63JTZiMnIs+S+Fhog+8azT3uz6S9vxha/S3LPzu+9mPurdHWcQ7QSKq8cuaDfzusd5a/Ss5D/yDib5FXg5/fk/UelJwDBD3+r2Amsa4WcwTp4Rs5/SJYtOFSzuOTbjIE7bDrnUeU/g66dcXWAeE8vr2LSSU0W3ydXfsHCEm3GYRS2FWVYwQdIuk2tdCxVdE5RtKthjEdduXOTulXWA1jSrv6Yk7p15iNY1i7/v4NxXl96YPaLbbslH6L6UB6vZtcpcE4x5FuPZJ271bX5ZR+j/1IGrwb3ojBcQ4k3Wco++Ktb7xR+iZ+Y7lV73CnFcg5lHSsweiC5BzjNmx9oJxjSccqTV2gpJcF7GzGkg5WHC3QpoUlHa48NQGTXhK4MxlNOlyB5sGbEpp0wBLVA056OeuA88GTjlilCRBnAygdsk6lQJReyTrkVCClY5ZqBMyJYEoHLVY3oNMAlY5arj5QJ4EqHbZgFYCVXsA67AxwpePWrBHc8QNLTw6uc2jpwGXLDbL01NaRxw4tHbpyj4EeObZ07No9AHvc4NLBq7cH+KjRpaPXLyXw0jNaRx8yvnT4Et4BP+AE0vGLeA3+cDNIT1DGCxIMNoX0DIX8IMNQc0hPUUoRSTLQJNJzFDPLMLNIz1HOFINMJD1DQRMMUUSS/cYP8MFmcZ4o6YJeVezRXZJKOnRdkcd2Qy7pwJXFHdk94MvkBpgjzuQ8W9IFtLyQg9oln3TEAgMO6RGYzfIZWKNOpjxl0gWszFCDaQIrMx3ADDyf86RJF5xao4yjh7TSQaqNMYpOYLrkCPGDT+k8cdIFoOThAxgjPixzhI4/qfP00gMnkFV5AelhU8jrPPeafiam+omdV0i6BMwis/Iq0r3nkdt5GemuM0nuvJB0t7lkV15iI/eJj438zkslXTymU8B5NenWE6qgvKB00ynVcF5RutmkiigvKt1kWmWUl5UuyjMrZFwqS9ebWy3jUlu6yuzKGZfq0mV2ghWVLyBdxudY07isIV1EuidaVrjIQtLPNEy3tG5CCCGEEEIIIYQQQgghhBBCCCGEEEIIIYQQQghJx/8BDmZqLpuWnGIAAAAASUVORK5CYII=","used_time":121,"message":"ok","status":200}]}
@@ -2705,7 +2646,7 @@ public class NeuhubAIDemoTester {
          * }
          * }
          */
-        @Test
+  /*      @Test
         public void vehicle_detection() {
             HttpHeaders httpHeaders = new HttpHeaders();
             httpHeaders.set("Content-Type", "application/octet-stream");
@@ -2722,7 +2663,7 @@ public class NeuhubAIDemoTester {
                 throw new RuntimeException(e);
             }
             result(responseEntity);
-        }
+        }*/
 
         /**
          * 调用结果: {
@@ -2901,22 +2842,7 @@ public class NeuhubAIDemoTester {
             result(responseEntity);
         }
 
-    @Test
-    public void universalForPesticide() {
-        byte[] data = dataBinary(picture);
-        String imageBase64 = imageBase64(data);
-        String value = String.format("imageBase64Str=%s", imageBase64);
-        HttpEntity<String> requestEntity = new HttpEntity<>(value);
-        String requestUrl = gatewayUrl + "/neuhub/universalForPesticide";
-        ResponseEntity<String> responseEntity = null;
-        try {
-            responseEntity = restTemplate.postForEntity(requestUrl, requestEntity, String.class);
-        } catch (Exception e) {
-            //调用API失败，错误处理
-            throw new RuntimeException(e);
-        }
-        result(responseEntity);
-    }
+
 
     private String imageBase64(byte[] data) {
         Base64.Encoder encoder = Base64.getEncoder();
