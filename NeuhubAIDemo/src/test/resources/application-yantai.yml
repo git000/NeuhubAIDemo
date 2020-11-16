@@ -1,0 +1,7 @@
+security:
+  oauth2:
+    client:
+      access-token-uri: https://yantai.aiggfw.jdcloud.com/oauth/token
+
+gateway:
+  url: https://yantai.aiggfw.jdcloud.com
