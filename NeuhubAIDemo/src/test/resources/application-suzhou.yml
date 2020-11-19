@@ -1,0 +1,7 @@
+security:
+  oauth2:
+    client:
+      access-token-uri: https://suzhou.aiggfw.jdcloud.com/oauth/token
+
+gateway:
+  url: https://suzhou.aiggfw.jdcloud.com
