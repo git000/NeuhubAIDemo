@@ -1,7 +1,7 @@
 security:
   oauth2:
     client:
-      access-token-uri: https://dongying-aiauth.jdcloud.com/oauth/token
+      access-token-uri: https://dongying.aiggfw.jdcloud.com/oauth/token
 
 gateway:
-  url: https://dongying-ccyaigw.jdcloud.com
+  url: https://dongying.aiggfw.jdcloud.com
